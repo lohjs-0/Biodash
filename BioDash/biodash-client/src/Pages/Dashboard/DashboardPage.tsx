@@ -68,12 +68,20 @@ function IconSun({ className = 'w-4 h-4' }: { className?: string }) {
   )
 }
 
+function DemoBadge() {
+  return (
+    <span className="text-[10px] px-2 py-0.5 rounded-full bg-yellow-500/10 border border-yellow-500/20 text-yellow-400 font-medium flex-shrink-0">
+      Dados demonstrativos
+    </span>
+  )
+}
+
 const soilData = [
-  { name: 'Ativ. Bio.',   antes: 45,  depois: 78  },
-  { name: 'Div. Micro.',  antes: 38,  depois: 71  },
-  { name: 'Mat. Org.',    antes: 3,   depois: 6   },
-  { name: 'pH Solo',      antes: 6,   depois: 8   },
-  { name: 'Nitrogênio',   antes: 120, depois: 195 },
+  { name: 'Ativ. Bio.',  antes: 45,  depois: 78  },
+  { name: 'Div. Micro.', antes: 38,  depois: 71  },
+  { name: 'Mat. Org.',   antes: 3,   depois: 6   },
+  { name: 'pH Solo',     antes: 6,   depois: 8   },
+  { name: 'Nitrogênio',  antes: 120, depois: 195 },
 ]
 
 const cycleData = [
@@ -216,7 +224,10 @@ export default function DashboardPage() {
 
         {/* Gráfico de barras */}
         <div className="lg:col-span-2 bg-gray-900 border border-gray-800 rounded-xl p-4 sm:p-5">
-          <h2 className="text-base font-medium text-white">Saúde biológica do solo</h2>
+          <div className="flex items-center justify-between mb-0.5">
+            <h2 className="text-base font-medium text-white">Saúde biológica do solo</h2>
+            <DemoBadge />
+          </div>
           <p className="text-xs text-gray-500 mt-0.5 mb-4">Comparativo antes e depois da aplicação</p>
           <ResponsiveContainer width="100%" height={220}>
             <BarChart data={soilData} margin={{ top: 5, right: 10, left: -10, bottom: 50 }}>
@@ -287,7 +298,10 @@ export default function DashboardPage() {
 
       {/* Gráfico de linha */}
       <div className="bg-gray-900 border border-gray-800 rounded-xl p-4 sm:p-5">
-        <h2 className="text-base font-medium text-white mb-1">Evolução durante o ciclo de 8h</h2>
+        <div className="flex items-center justify-between mb-0.5">
+          <h2 className="text-base font-medium text-white">Evolução durante o ciclo de 8h</h2>
+          <DemoBadge />
+        </div>
         <p className="text-xs text-gray-500 mb-4">Atividade biológica e diversidade microbiana</p>
         <ResponsiveContainer width="100%" height={200}>
           <LineChart data={cycleData} margin={{ top: 5, right: 10, left: -15, bottom: 5 }}>
@@ -296,8 +310,8 @@ export default function DashboardPage() {
             <YAxis tick={{ fill: '#6b7280', fontSize: 11 }} domain={[0, 100]} />
             <Tooltip contentStyle={tooltipStyle} />
             <Legend wrapperStyle={{ color: '#9ca3af', fontSize: 11 }} />
-            <Line type="monotone" dataKey="atividadeBiologica"    name="Ativ. biológica"   stroke="#3b82f6" strokeWidth={2} dot={{ r: 3, fill: '#3b82f6' }} />
-            <Line type="monotone" dataKey="diversidadeMicrobiana" name="Div. microbiana"   stroke="#10b981" strokeWidth={2} dot={{ r: 3, fill: '#10b981' }} />
+            <Line type="monotone" dataKey="atividadeBiologica"    name="Ativ. biológica" stroke="#3b82f6" strokeWidth={2} dot={{ r: 3, fill: '#3b82f6' }} />
+            <Line type="monotone" dataKey="diversidadeMicrobiana" name="Div. microbiana"  stroke="#10b981" strokeWidth={2} dot={{ r: 3, fill: '#10b981' }} />
           </LineChart>
         </ResponsiveContainer>
 
