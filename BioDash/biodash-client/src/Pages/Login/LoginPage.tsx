@@ -24,13 +24,14 @@ function IconEyeOff({ className = 'w-4 h-4' }: { className?: string }) {
 
 const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#&?_\-]).{8,}$/
 
-const checks = [
-  { label: '8+ caracteres',      ok: password.length >= 8 },
-  { label: 'Letra maiúscula',    ok: /[A-Z]/.test(password) },
-  { label: 'Letra minúscula',    ok: /[a-z]/.test(password) },
-  { label: 'Número',             ok: /\d/.test(password) },
-  { label: 'Caractere especial', ok: /[@$!%*#&?_\-]/.test(password) },
-]
+function PasswordStrength({ password }: { password: string }) {
+  const checks = [
+    { label: '8+ caracteres',      ok: password.length >= 8 },
+    { label: 'Letra maiúscula',    ok: /[A-Z]/.test(password) },
+    { label: 'Letra minúscula',    ok: /[a-z]/.test(password) },
+    { label: 'Número',             ok: /\d/.test(password) },
+    { label: 'Caractere especial', ok: /[@$!%*#&?_\-]/.test(password) },
+  ]
 
   const score = checks.filter((c) => c.ok).length
 
@@ -59,6 +60,17 @@ const checks = [
           </span>
         ))}
       </div>
+    </div>
+  )
+}
+
+const inputCls = 'bg-gray-800/80 border border-gray-700 rounded-xl px-4 py-3 text-white text-base sm:text-sm focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500/30 transition-all placeholder:text-gray-600 w-full'
+
+function Field({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div className="flex flex-col gap-1.5">
+      <label className="text-xs font-medium text-gray-400 uppercase tracking-wider">{label}</label>
+      {children}
     </div>
   )
 }
@@ -241,17 +253,6 @@ export default function LoginPage() {
           to   { transform: translate(30px, 20px) scale(1.08); }
         }
       `}</style>
-    </div>
-  )
-}
-
-const inputCls = 'bg-gray-800/80 border border-gray-700 rounded-xl px-4 py-3 text-white text-base sm:text-sm focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500/30 transition-all placeholder:text-gray-600 w-full'
-
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <div className="flex flex-col gap-1.5">
-      <label className="text-xs font-medium text-gray-400 uppercase tracking-wider">{label}</label>
-      {children}
     </div>
   )
 }
