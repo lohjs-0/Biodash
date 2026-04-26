@@ -41,7 +41,7 @@ export default function LoginPage() {
         ? await authApi.register({ name, email, password, organization })
         : await authApi.login({ email, password })
       setAuth(data.token, data.user)
-      navigate('/dashboard')
+      setTimeout(() => navigate('/dashboard', { replace: true }), 50)
     } catch {
       toast(isRegister ? 'Erro ao criar conta.' : 'E-mail ou senha inválidos.', 'error')
     } finally {
