@@ -22,17 +22,15 @@ function IconEyeOff({ className = 'w-4 h-4' }: { className?: string }) {
   )
 }
 
-const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/
+const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#&?_\-]).{8,}$/
 
-function PasswordStrength({ password }: { password: string }) {
-  if (!password) return null
-
-  const checks = [
-    { label: '8+ caracteres', ok: password.length >= 8 },
-    { label: 'Letra maiúscula', ok: /[A-Z]/.test(password) },
-    { label: 'Letra minúscula', ok: /[a-z]/.test(password) },
-    { label: 'Número', ok: /\d/.test(password) },
-  ]
+const checks = [
+  { label: '8+ caracteres',      ok: password.length >= 8 },
+  { label: 'Letra maiúscula',    ok: /[A-Z]/.test(password) },
+  { label: 'Letra minúscula',    ok: /[a-z]/.test(password) },
+  { label: 'Número',             ok: /\d/.test(password) },
+  { label: 'Caractere especial', ok: /[@$!%*#&?_\-]/.test(password) },
+]
 
   const score = checks.filter((c) => c.ok).length
 
