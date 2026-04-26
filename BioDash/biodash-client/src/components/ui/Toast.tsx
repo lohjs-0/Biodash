@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { setAddToastFn } from './toastService'
 
 export type ToastType = 'success' | 'error' | 'warning'
@@ -11,26 +11,39 @@ interface ToastMessage {
 }
 
 const styles = {
-  success: { bar: 'bg-teal-500',   bg: 'bg-gray-900 border-teal-500/30',  icon: '✓', iconBg: 'bg-teal-500/15 text-teal-400' },
-  error:   { bar: 'bg-red-500',    bg: 'bg-gray-900 border-red-500/30',   icon: '✕', iconBg: 'bg-red-500/15 text-red-400' },
-  warning: { bar: 'bg-yellow-500', bg: 'bg-gray-900 border-yellow-500/30',icon: '⚠', iconBg: 'bg-yellow-500/15 text-yellow-400' },
+  success: { bar: 'bg-teal-500',   bg: 'bg-gray-900 border-teal-500/30',   icon: '✓', iconBg: 'bg-teal-500/15 text-teal-400'    },
+  error:   { bar: 'bg-red-500',    bg: 'bg-gray-900 border-red-500/30',    icon: '✕', iconBg: 'bg-red-500/15 text-red-400'      },
+  warning: { bar: 'bg-yellow-500', bg: 'bg-gray-900 border-yellow-500/30', icon: '⚠', iconBg: 'bg-yellow-500/15 text-yellow-400'},
 }
 
 export default function ToastContainer() {
   const [toasts, setToasts] = useState<ToastMessage[]>([])
+  const timers = useRef<Map<number, ReturnType<typeof setTimeout>[]>>(new Map())
 
   useEffect(() => {
     setAddToastFn((message, type) => {
       const id = Date.now()
       setToasts((prev) => [...prev, { id, message, type, visible: true }])
-      setTimeout(() => {
+
+      const t1 = setTimeout(() => {
         setToasts((prev) => prev.map((t) => t.id === id ? { ...t, visible: false } : t))
-        setTimeout(() => {
+
+        const t2 = setTimeout(() => {
           setToasts((prev) => prev.filter((t) => t.id !== id))
+          timers.current.delete(id)
         }, 300)
+
+        timers.current.set(id, [...(timers.current.get(id) ?? []), t2])
       }, 3200)
+
+      timers.current.set(id, [t1])
     })
-    return () => setAddToastFn(null)
+
+    return () => {
+      setAddToastFn(null)
+      timers.current.forEach((ts) => ts.forEach(clearTimeout))
+      timers.current.clear()
+    }
   }, [])
 
   return (
@@ -52,14 +65,17 @@ export default function ToastContainer() {
               {s.icon}
             </span>
             <span className="text-sm text-gray-200 font-medium">{t.message}</span>
-            <div className={`absolute bottom-0 left-0 h-0.5 rounded-full ${s.bar} animate-[shrink_3.2s_linear_forwards]`} style={{ width: '100%' }} />
+            <div
+              className={`absolute bottom-0 left-0 h-0.5 rounded-full ${s.bar} animate-[shrink_3.2s_linear_forwards]`}
+              style={{ width: '100%' }}
+            />
           </div>
         )
       })}
       <style>{`
         @keyframes shrink {
           from { width: 100%; }
-          to { width: 0%; }
+          to   { width: 0%;   }
         }
       `}</style>
     </div>
