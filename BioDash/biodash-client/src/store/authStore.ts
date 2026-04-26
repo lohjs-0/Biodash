@@ -19,6 +19,9 @@ export const useAuthStore = create<AuthState>()(
       clearAuth: () => set({ token: null, user: null }),
       isAuthenticated: () => !!get().token,
     }),
-    { name: "biodash-auth" },
+    {
+      name: "biodash-auth",
+      version: 2,
+    },
   ),
 );
