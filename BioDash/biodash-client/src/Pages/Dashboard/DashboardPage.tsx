@@ -67,12 +67,24 @@ function IconSun({ className = 'w-4 h-4' }: { className?: string }) {
     </svg>
   )
 }
-
-function DemoBadge() {
+function IconInfo({ className = 'w-3 h-3' }: { className?: string }) {
   return (
-    <span className="text-[10px] px-2 py-0.5 rounded-full bg-yellow-500/10 border border-yellow-500/20 text-yellow-400 font-medium flex-shrink-0">
-      Dados demonstrativos
-    </span>
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="10" />
+      <line x1="12" y1="8" x2="12" y2="8.5" />
+      <line x1="12" y1="12" x2="12" y2="16" />
+    </svg>
+  )
+}
+
+function DemoNotice() {
+  return (
+    <div className="flex items-center gap-1.5 mt-1 mb-3">
+      <IconInfo className="w-3 h-3 text-yellow-500 flex-shrink-0" />
+      <p className="text-[11px] text-yellow-500/80">
+        Dados demonstrativos — não refletem dados reais dos seus tanques
+      </p>
+    </div>
   )
 }
 
@@ -98,6 +110,7 @@ const tooltipStyle = {
   borderRadius: '8px',
   color: '#f9fafb',
   fontSize: '12px',
+  cursor: 'default',
 }
 
 export default function DashboardPage() {
@@ -114,7 +127,7 @@ export default function DashboardPage() {
   const energiaSolar = (co2Reduzido / 5.5).toFixed(1)
 
   return (
-    <div className="flex flex-col gap-4 sm:gap-6">
+    <div className="flex flex-col gap-4 sm:gap-6 cursor-default">
 
       {/* Header */}
       <div className="flex items-center gap-3">
@@ -187,7 +200,7 @@ export default function DashboardPage() {
                 const phAlert   = tank.currentPh < 6 || tank.currentPh > 8.5
                 const critical  = tempAlert && phAlert
                 return (
-                  <div key={tank.id} className={`rounded-xl p-3 border ${critical ? 'bg-red-500/10 border-red-500/30' : 'bg-yellow-500/10 border-yellow-500/30'}`}>
+                  <div key={tank.id} className={`rounded-xl p-3 border cursor-pointer hover:opacity-90 transition-opacity ${critical ? 'bg-red-500/10 border-red-500/30' : 'bg-yellow-500/10 border-yellow-500/30'}`}>
                     <div className="flex items-center justify-between mb-1.5">
                       <p className={`text-sm font-medium truncate max-w-[120px] ${critical ? 'text-red-400' : 'text-yellow-400'}`}>
                         {tank.name}
@@ -224,17 +237,15 @@ export default function DashboardPage() {
 
         {/* Gráfico de barras */}
         <div className="lg:col-span-2 bg-gray-900 border border-gray-800 rounded-xl p-4 sm:p-5">
-          <div className="flex items-center justify-between mb-0.5">
-            <h2 className="text-base font-medium text-white">Saúde biológica do solo</h2>
-            <DemoBadge />
-          </div>
-          <p className="text-xs text-gray-500 mt-0.5 mb-4">Comparativo antes e depois da aplicação</p>
+          <h2 className="text-base font-medium text-white">Saúde biológica do solo</h2>
+          <p className="text-xs text-gray-500 mt-0.5">Comparativo antes e depois da aplicação</p>
+          <DemoNotice />
           <ResponsiveContainer width="100%" height={220}>
             <BarChart data={soilData} margin={{ top: 5, right: 10, left: -10, bottom: 50 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
               <XAxis dataKey="name" tick={{ fill: '#6b7280', fontSize: 10 }} angle={-30} textAnchor="end" interval={0} />
               <YAxis tick={{ fill: '#6b7280', fontSize: 10 }} />
-              <Tooltip contentStyle={tooltipStyle} />
+              <Tooltip contentStyle={tooltipStyle} cursor={{ fill: 'rgba(255,255,255,0.04)' }} />
               <Legend wrapperStyle={{ color: '#9ca3af', fontSize: 11, paddingTop: 8 }} />
               <Bar dataKey="antes"  name="Antes"  fill="#ef4444" radius={[4, 4, 0, 0]} />
               <Bar dataKey="depois" name="Depois" fill="#10b981" radius={[4, 4, 0, 0]} />
@@ -250,17 +261,17 @@ export default function DashboardPage() {
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs text-gray-500">Volume de biofertilizante (L)</label>
+            <label className="text-xs text-gray-500 cursor-text">Volume de biofertilizante (L)</label>
             <input
               type="number" min="0" value={fertInput}
               onChange={(e) => setFertInput(e.target.value)}
               inputMode="decimal"
-              className="bg-gray-800 border border-gray-700 rounded-xl px-3 py-2.5 text-white text-base sm:text-sm focus:outline-none focus:border-teal-500 transition-colors"
+              className="bg-gray-800 border border-gray-700 rounded-xl px-3 py-2.5 text-white text-base sm:text-sm focus:outline-none focus:border-teal-500 transition-colors cursor-text"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-2 sm:gap-3">
-            <div className="bg-teal-500/10 border border-teal-500/20 rounded-xl p-3">
+            <div className="bg-teal-500/10 border border-teal-500/20 rounded-xl p-3 cursor-default">
               <div className="flex items-center gap-1.5 mb-1">
                 <IconLeaf className="w-3.5 h-3.5 text-teal-400" />
                 <p className="text-xs text-teal-400">Fert. evitado</p>
@@ -268,7 +279,7 @@ export default function DashboardPage() {
               <p className="text-xl sm:text-2xl font-semibold text-teal-400 mt-1 tabular-nums">{fertEvitado.toFixed(1)}</p>
               <p className="text-xs text-gray-500">kg NPK</p>
             </div>
-            <div className="bg-blue-500/10 border border-blue-500/20 rounded-xl p-3">
+            <div className="bg-blue-500/10 border border-blue-500/20 rounded-xl p-3 cursor-default">
               <div className="flex items-center gap-1.5 mb-1">
                 <IconZap className="w-3.5 h-3.5 text-blue-400" />
                 <p className="text-xs text-blue-400">Redução CO₂</p>
@@ -298,17 +309,15 @@ export default function DashboardPage() {
 
       {/* Gráfico de linha */}
       <div className="bg-gray-900 border border-gray-800 rounded-xl p-4 sm:p-5">
-        <div className="flex items-center justify-between mb-0.5">
-          <h2 className="text-base font-medium text-white">Evolução durante o ciclo de 8h</h2>
-          <DemoBadge />
-        </div>
-        <p className="text-xs text-gray-500 mb-4">Atividade biológica e diversidade microbiana</p>
+        <h2 className="text-base font-medium text-white">Evolução durante o ciclo de 8h</h2>
+        <p className="text-xs text-gray-500">Atividade biológica e diversidade microbiana</p>
+        <DemoNotice />
         <ResponsiveContainer width="100%" height={200}>
           <LineChart data={cycleData} margin={{ top: 5, right: 10, left: -15, bottom: 5 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
             <XAxis dataKey="hora" tick={{ fill: '#6b7280', fontSize: 11 }} />
             <YAxis tick={{ fill: '#6b7280', fontSize: 11 }} domain={[0, 100]} />
-            <Tooltip contentStyle={tooltipStyle} />
+            <Tooltip contentStyle={tooltipStyle} cursor={{ stroke: 'rgba(255,255,255,0.1)' }} />
             <Legend wrapperStyle={{ color: '#9ca3af', fontSize: 11 }} />
             <Line type="monotone" dataKey="atividadeBiologica"    name="Ativ. biológica" stroke="#3b82f6" strokeWidth={2} dot={{ r: 3, fill: '#3b82f6' }} />
             <Line type="monotone" dataKey="diversidadeMicrobiana" name="Div. microbiana"  stroke="#10b981" strokeWidth={2} dot={{ r: 3, fill: '#10b981' }} />
