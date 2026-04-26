@@ -1,6 +1,6 @@
 # BioDash
 
-> Plataforma fullstack de monitoramento em tempo real para tanques biológicos — biorreatores, aquicultura e sistemas BFT.
+> Plataforma fullstack de monitoramento em tempo real para tanques biológicos: biorreatores, aquicultura e sistemas BFT.
 
 ![.NET](https://img.shields.io/badge/.NET-9.0-512BD4?style=flat&logo=dotnet)
 ![React](https://img.shields.io/badge/React-18-61DAFB?style=flat&logo=react)
