@@ -22,6 +22,49 @@ function IconEyeOff({ className = 'w-4 h-4' }: { className?: string }) {
   )
 }
 
+const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/
+
+function PasswordStrength({ password }: { password: string }) {
+  if (!password) return null
+
+  const checks = [
+    { label: '8+ caracteres', ok: password.length >= 8 },
+    { label: 'Letra maiúscula', ok: /[A-Z]/.test(password) },
+    { label: 'Letra minúscula', ok: /[a-z]/.test(password) },
+    { label: 'Número', ok: /\d/.test(password) },
+  ]
+
+  const score = checks.filter((c) => c.ok).length
+
+  const barColor =
+    score <= 1 ? 'bg-red-500' :
+    score === 2 ? 'bg-orange-500' :
+    score === 3 ? 'bg-yellow-500' :
+    'bg-teal-500'
+
+  return (
+    <div className="mt-1.5 space-y-1.5">
+      <div className="flex gap-1">
+        {[1, 2, 3, 4].map((i) => (
+          <div
+            key={i}
+            className={`h-1 flex-1 rounded-full transition-all duration-300 ${
+              i <= score ? barColor : 'bg-gray-700'
+            }`}
+          />
+        ))}
+      </div>
+      <div className="flex flex-wrap gap-x-3 gap-y-0.5">
+        {checks.map(({ label, ok }) => (
+          <span key={label} className={`text-[10px] ${ok ? 'text-teal-400' : 'text-gray-600'}`}>
+            {ok ? '✓' : '○'} {label}
+          </span>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 export default function LoginPage() {
   const navigate = useNavigate()
   const setAuth = useAuthStore((s) => s.setAuth)
@@ -36,6 +79,13 @@ export default function LoginPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setLoading(true)
+
+    if (isRegister && !PASSWORD_REGEX.test(password)) {
+      toast('A senha deve ter 8+ caracteres, com maiúscula, minúscula e número.', 'error')
+      setLoading(false)
+      return
+    }
+
     try {
       const data = isRegister
         ? await authApi.register({ name, email, password, organization })
@@ -52,7 +102,7 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen min-h-dvh bg-gray-950 flex flex-col items-center justify-center relative overflow-hidden px-4 py-8">
 
-      {/* Background blobs animados */}
+      {/* Background blobs */}
       <div className="absolute top-[-10%] left-[-10%] w-72 h-72 sm:w-96 sm:h-96 bg-teal-500/10 rounded-full blur-3xl pointer-events-none animate-[blobDrift_8s_ease-in-out_infinite_alternate]" />
       <div className="absolute bottom-[-10%] right-[-10%] w-72 h-72 sm:w-96 sm:h-96 bg-blue-500/8 rounded-full blur-3xl pointer-events-none animate-[blobDrift_10s_ease-in-out_infinite_alternate-reverse]" />
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-teal-500/5 rounded-full blur-3xl pointer-events-none animate-[blobDrift_12s_ease-in-out_infinite_alternate]" />
@@ -155,6 +205,7 @@ export default function LoginPage() {
                     {showPassword ? <IconEyeOff className="w-4 h-4" /> : <IconEye className="w-4 h-4" />}
                   </button>
                 </div>
+                {isRegister && <PasswordStrength password={password} />}
               </Field>
 
               <button
@@ -195,8 +246,6 @@ export default function LoginPage() {
     </div>
   )
 }
-
-// ── Helpers ────────────────────────────────────────────────────────────────────
 
 const inputCls = 'bg-gray-800/80 border border-gray-700 rounded-xl px-4 py-3 text-white text-base sm:text-sm focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500/30 transition-all placeholder:text-gray-600 w-full'
 
