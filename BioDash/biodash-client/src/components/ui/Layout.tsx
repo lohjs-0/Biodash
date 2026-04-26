@@ -102,11 +102,12 @@ const bottomNavItems = [
   { to: '/settings', icon: <IconSettings className="w-5 h-5" />, label: 'Configurações' },
 ]
 
-// ── Sidebar content (reutilizado no desktop e no drawer mobile) ────────────────
+// ── Sidebar content ────────────────────────────────────────────────────────────
 
-function SidebarContent({ onNavigate, onLogout, user }: {
+function SidebarContent({ onNavigate, onLogout, user, onGoToSettings }: {
   onNavigate?: () => void
   onLogout: () => void
+  onGoToSettings: () => void
   user: { name?: string; email?: string; organization?: string } | null
 }) {
   return (
@@ -169,23 +170,27 @@ function SidebarContent({ onNavigate, onLogout, user }: {
       {/* User + Logout */}
       <div className="mt-auto flex flex-col gap-2">
         {user && (
-          <div className="px-3 py-3 rounded-xl bg-gray-800/50 border border-gray-700/50">
+          <button
+            onClick={() => { onGoToSettings(); onNavigate?.() }}
+            className="px-3 py-3 rounded-xl bg-gray-800/50 border border-gray-700/50 hover:bg-gray-800 hover:border-gray-600 transition-all duration-150 cursor-pointer text-left w-full"
+          >
             <div className="flex items-center gap-2.5">
               <div className="w-8 h-8 rounded-full bg-teal-600/30 border border-teal-500/30 flex items-center justify-center flex-shrink-0">
                 <span className="text-xs font-semibold text-teal-300">
                   {user.name?.charAt(0).toUpperCase()}
                 </span>
               </div>
-              <div className="overflow-hidden">
+              <div className="overflow-hidden flex-1">
                 <p className="text-xs font-medium text-gray-200 truncate">{user.name}</p>
                 <p className="text-[10px] text-gray-600 truncate">{user.organization || user.email}</p>
               </div>
+              <IconSettings className="w-3.5 h-3.5 text-gray-600 flex-shrink-0" />
             </div>
-          </div>
+          </button>
         )}
         <button
           onClick={onLogout}
-          className="flex items-center gap-2 px-3 py-3 sm:py-2.5 rounded-xl text-sm text-gray-500 hover:bg-red-500/10 active:bg-red-500/10 hover:text-red-400 border border-transparent transition-all duration-150"
+          className="flex items-center gap-2 px-3 py-3 sm:py-2.5 rounded-xl text-sm text-gray-500 hover:bg-red-500/10 active:bg-red-500/10 hover:text-red-400 border border-transparent transition-all duration-150 cursor-pointer"
         >
           <IconLogOut className="w-4 h-4" />
           Sair
@@ -207,23 +212,25 @@ export default function Layout() {
     navigate('/login')
   }
 
+  function handleGoToSettings() {
+    navigate('/settings')
+  }
+
   return (
     <div className="flex h-screen bg-gray-950 text-gray-100 overflow-hidden">
 
-      {/* ── Sidebar desktop (oculta no mobile) ── */}
+      {/* ── Sidebar desktop ── */}
       <aside className="hidden sm:flex w-60 bg-gray-900 border-r border-gray-800/80 flex-col flex-shrink-0">
-        <SidebarContent user={user} onLogout={handleLogout} />
+        <SidebarContent user={user} onLogout={handleLogout} onGoToSettings={handleGoToSettings} />
       </aside>
 
       {/* ── Drawer mobile ── */}
       {drawerOpen && (
         <div className="sm:hidden fixed inset-0 z-40 flex">
-          {/* Overlay */}
           <div
             className="absolute inset-0 bg-black/60 backdrop-blur-sm"
             onClick={() => setDrawerOpen(false)}
           />
-          {/* Painel */}
           <div className="relative w-72 max-w-[85vw] bg-gray-900 border-r border-gray-800/80 flex flex-col h-full animate-[slideRight_0.22s_ease]">
             <button
               onClick={() => setDrawerOpen(false)}
@@ -234,6 +241,7 @@ export default function Layout() {
             <SidebarContent
               user={user}
               onLogout={handleLogout}
+              onGoToSettings={handleGoToSettings}
               onNavigate={() => setDrawerOpen(false)}
             />
           </div>
