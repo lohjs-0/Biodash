@@ -14,7 +14,7 @@ interface Alert {
   resolvedAt: string | null
 }
 
-const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:5071/api'
+const API_URL = import.meta.env.VITE_API_URL ?? 'http://biodash-production.up.railway.app'
 
 const PARAM_LABELS: Record<Alert['parameter'], string> = {
   temperature: 'Temperatura',
