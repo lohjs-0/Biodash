@@ -11,9 +11,9 @@ public record RegisterRequest(
 
     [Required, MinLength(8), MaxLength(100)]
     [RegularExpression(
-        @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$",
-        ErrorMessage = "A senha deve conter pelo menos uma letra maiúscula, uma minúscula e um número.")]
-    string Password,
+    @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#&?_\-]).{8,}$",
+    ErrorMessage = "A senha deve conter maiúscula, minúscula, número e caractere especial (@$!%*#&?_-).")]
+string Password,
 
     [MaxLength(150)]
     string? Organization
