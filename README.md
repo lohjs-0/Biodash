@@ -18,6 +18,8 @@
 
 ## 🧬 Sobre o projeto
 
+> Acesse: https://biodash-web.netlify.app
+
 BioDash nasceu da necessidade de acompanhar parâmetros críticos de sistemas biológicos, temperatura, pH e nível de fluido, com feedback instantâneo e alertas automáticos quando os valores saem dos limites seguros.
 
 O projeto foi construído como uma **aplicação de portfólio inspirada em produção**, priorizando arquitetura limpa, comunicação em tempo real e práticas modernas de desenvolvimento fullstack.
