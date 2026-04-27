@@ -12,7 +12,7 @@
 
 ## 📸 Preview
 
-<img src="print.jpeg" alt="Preview do BioDash" width="100%">
+<img src="IMG-20260426-WA0001.jpg" alt="Preview do BioDash" width="100%">
 
 ---
 
